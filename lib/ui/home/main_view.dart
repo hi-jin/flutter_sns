@@ -33,29 +33,27 @@ class _MainViewState extends State<MainView> {
       appBar: AppBar(
         title: Text('fastagram'),
         actions: [
-          if (user == null)
-            ...[
-              TextButton(
-                onPressed: () async {
-                  final user = await showDialog(
-                    context: context,
-                    builder: (context) {
-                      return LoginDialog();
-                    },
-                  );
-                  print(user);
-                  getAuth();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    '로그인',
-                    style: TextStyle(color: Colors.white),
-                  ),
+          if (user == null) ...[
+            TextButton(
+              onPressed: () async {
+                final user = await showDialog(
+                  context: context,
+                  builder: (context) {
+                    return LoginDialog();
+                  },
+                );
+                print(user);
+                getAuth();
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  '로그인',
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
-            ]
-          else ...[
+            ),
+          ] else ...[
             TextButton(
               onPressed: () {
                 _auth.signOut().then((value) {
@@ -77,7 +75,8 @@ class _MainViewState extends State<MainView> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Center(
           child: Column(
-            mainAxisSize: (user == null) ? MainAxisSize.min : MainAxisSize.max,
+            mainAxisSize:
+                (user == null) ? MainAxisSize.min : MainAxisSize.max,
             children: [
               if (user == null) ...[
                 Text(
