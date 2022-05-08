@@ -4,6 +4,7 @@ import 'package:flutter_sns/core/theme.dart';
 import 'package:flutter_sns/widgets/colored_button.dart';
 
 import '../core/auth.dart';
+import 'loading_widget.dart';
 
 class LoginDialog extends StatefulWidget {
   LoginDialog({Key? key}) : super(key: key);
@@ -133,20 +134,7 @@ class _LoginDialogState extends State<LoginDialog> {
         ],
       ),
       if (nowLoading) ...[
-        Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.grey.withOpacity(0.5),
-          child: Center(
-            child: Container(
-              color: Colors.white,
-              child: Text(
-                "Loading...",
-                style: kTitleTextStyle,
-              ),
-            ),
-          ),
-        ),
+        LoadingWidget(),
       ]
     ]);
   }
