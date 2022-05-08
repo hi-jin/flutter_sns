@@ -32,6 +32,46 @@ class _MainViewState extends State<MainView> {
     return Scaffold(
       appBar: AppBar(
         title: Text('fastagram'),
+        actions: [
+          if (user == null)
+            ...[
+              TextButton(
+                onPressed: () async {
+                  final user = await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return LoginDialog();
+                    },
+                  );
+                  print(user);
+                  getAuth();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    '로그인',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ]
+          else ...[
+            TextButton(
+              onPressed: () {
+                _auth.signOut().then((value) {
+                  getAuth();
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  '로그아웃',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ]
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -83,15 +123,6 @@ class _MainViewState extends State<MainView> {
                       user!.email!.split('@').elementAt(0),
                       style: kTitleTextStyle,
                     ),
-                    ColoredButton(
-                      title: '로그아웃 하기',
-                      backgroundColor: Colors.blue,
-                      onPressed: () {
-                        _auth.signOut().then((value) {
-                          getAuth();
-                        });
-                      },
-                    )
                   ],
                 ),
               ]
