@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sns/core/theme.dart';
 import 'package:flutter_sns/widgets/colored_button.dart';
 
+import '../core/auth.dart';
+
 class LoginDialog extends StatefulWidget {
   LoginDialog({Key? key}) : super(key: key);
 
@@ -12,7 +14,6 @@ class LoginDialog extends StatefulWidget {
 
 class _LoginDialogState extends State<LoginDialog> {
   late TextEditingController _emailController, _pwController;
-  final _auth = FirebaseAuth.instance;
   bool nowLoading = false;
 
   @override
@@ -68,7 +69,7 @@ class _LoginDialogState extends State<LoginDialog> {
                           });
                           try {
                             final newUser =
-                                await _auth.createUserWithEmailAndPassword(
+                                await auth.createUserWithEmailAndPassword(
                               email: _emailController.text,
                               password: _pwController.text,
                             );
@@ -103,7 +104,7 @@ class _LoginDialogState extends State<LoginDialog> {
                             nowLoading = true;
                           });
                           try {
-                            final user = await _auth.signInWithEmailAndPassword(
+                            final user = await auth.signInWithEmailAndPassword(
                               email: _emailController.text,
                               password: _pwController.text,
                             );

@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sns/core/theme.dart';
+import 'package:flutter_sns/widgets/chat_widget.dart';
 import 'package:flutter_sns/widgets/colored_button.dart';
 import 'package:flutter_sns/widgets/login_dialog.dart';
+
+import '../../core/auth.dart';
 
 class MainView extends StatefulWidget {
   const MainView({Key? key}) : super(key: key);
@@ -12,8 +15,6 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
-  final _auth = FirebaseAuth.instance;
-  User? user;
 
   @override
   void initState() {
@@ -23,7 +24,7 @@ class _MainViewState extends State<MainView> {
 
   void getAuth() {
     setState(() {
-      user = _auth.currentUser;
+      user = auth.currentUser;
     });
   }
 
@@ -56,7 +57,7 @@ class _MainViewState extends State<MainView> {
           ] else ...[
             TextButton(
               onPressed: () {
-                _auth.signOut().then((value) {
+                auth.signOut().then((value) {
                   getAuth();
                 });
               },
@@ -71,61 +72,65 @@ class _MainViewState extends State<MainView> {
           ]
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Center(
-          child: Column(
-            mainAxisSize:
-                (user == null) ? MainAxisSize.min : MainAxisSize.max,
-            children: [
-              if (user == null) ...[
-                Text(
-                  '안녕하세요',
-                  style: kTitleTextStyle,
-                ),
-                SizedBox(height: 20.0),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '사용하기에 앞서',
-                      style: kTitleTextStyle,
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        final user = await showDialog(
-                          context: context,
-                          builder: (context) {
-                            return LoginDialog();
-                          },
-                        );
-                        print(user);
-                        getAuth();
-                      },
-                      child: Text(
-                        "로그인",
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Center(
+            child: Column(
+              mainAxisSize:
+                  (user == null) ? MainAxisSize.min : MainAxisSize.max,
+              children: [
+                if (user == null) ...[
+                  Text(
+                    '안녕하세요',
+                    style: kTitleTextStyle,
+                  ),
+                  SizedBox(height: 20.0),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '사용하기에 앞서',
                         style: kTitleTextStyle,
                       ),
-                    ),
-                    Text(
-                      '해주세요',
-                      style: kTitleTextStyle,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 100.0),
-              ] else ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      user!.email!.split('@').elementAt(0),
-                      style: kTitleTextStyle,
-                    ),
-                  ],
-                ),
-              ]
-            ],
+                      TextButton(
+                        onPressed: () async {
+                          final user = await showDialog(
+                            context: context,
+                            builder: (context) {
+                              return LoginDialog();
+                            },
+                          );
+                          print(user);
+                          getAuth();
+                        },
+                        child: Text(
+                          "로그인",
+                          style: kTitleTextStyle.copyWith(color: Colors.blue),
+                        ),
+                      ),
+                      Text(
+                        '해주세요',
+                        style: kTitleTextStyle,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 100.0),
+                ] else ...[
+                  // 로그인 완료
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        user!.email!.split('@').elementAt(0),
+                        style: kTitleTextStyle,
+                      ),
+                    ],
+                  ),
+                  Expanded(child: ChatWidget()),
+                ]
+              ],
+            ),
           ),
         ),
       ),
