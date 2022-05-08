@@ -33,9 +33,37 @@ class _ChatWidgetState extends State<ChatWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('익명 채팅', style: kTitleTextStyle.copyWith(fontSize: 20.0)),
             SizedBox(height: 10),
-            Expanded(child: SizedBox.shrink()),
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _fireStore.collection('messages').orderBy('sent_at').snapshots(),
+                builder: (context, snapshot) {
+                  List<String> senders = [];
+                  List<String> messages = [];
+                  List<Timestamp> sent_at = [];
+
+                  if (snapshot.hasData) {
+                    for (var data in snapshot.data!.docs) {
+                      senders.add(data['sender']);
+                      messages.add(data['text']);
+                      sent_at.add(data['sent_at']);
+                    }
+                  }
+                  return ListView.builder(
+                    itemCount: senders.length,
+                    itemBuilder: (context, i) {
+                      final at = DateTime.fromMicrosecondsSinceEpoch(sent_at.elementAt(i).microsecondsSinceEpoch);
+                      return ListTile(
+                        textColor: (user!.email != senders.elementAt(i)) ? Colors.black: Colors.blue,
+                        title: Text(messages.elementAt(i)),
+                        subtitle: Text('by ${senders.elementAt(i).split('@').elementAt(0)}'),
+                        trailing: Text('${at.hour}시 ${at.minute}분'),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
             TextField(
               controller: _chatController,
               decoration: kInputDecoration.copyWith(
@@ -47,6 +75,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                     _fireStore.collection("messages").add({
                       'text': _chatController.text,
                       'sender': user!.email,
+                      'sent_at': Timestamp.now(),
                     });
                     setState(() {
                       _chatController.text = "";
