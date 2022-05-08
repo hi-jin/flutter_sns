@@ -44,6 +44,19 @@ class _FeedViewState extends State<FeedView> {
                   child: Column(
                 children: [],
               )),
+              TextButton(
+                onPressed: () async {
+                  ListResult result = await _fireStorage.listAll();
+
+                  result.items.forEach((element) {
+                    print(element);
+                  });
+
+                  _fireStorage.listAll().then((value) =>
+                      print(value.items.length)); // TODO : 저장된 파일 링크 불러오는 방법???
+                },
+                child: Text("get list"),
+              ),
               ColoredButton(
                 title: "사진 업로드",
                 backgroundColor: Colors.blue,
