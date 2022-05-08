@@ -62,13 +62,14 @@ class _LoginDialogState extends State<LoginDialog> {
                         }
 
                         try {
-                          final newUser = await _auth.createUserWithEmailAndPassword(
+                          final newUser =
+                              await _auth.createUserWithEmailAndPassword(
                             email: _emailController.text,
-                            password: _pwController.text,);
+                            password: _pwController.text,
+                          );
 
-                          print(newUser);
                           Navigator.pop(context, newUser);
-                        } on FirebaseAuthException catch(e) {
+                        } on FirebaseAuthException catch (e) {
                           if (e.code == 'email-already-in-use') {
                             showMessageDialog(context, '이미 사용중인 이메일입니다.');
                           }
@@ -85,12 +86,27 @@ class _LoginDialogState extends State<LoginDialog> {
                     child: ColoredButton(
                       title: "로그인",
                       backgroundColor: Colors.blue,
-                      onPressed: () {
+                      onPressed: () async {
                         // check empty
                         if (_emailController.text == "" ||
                             _pwController.text == "") {
                           showMessageDialog(context, '이메일, 패스워드를 모두 입력해주세요');
                           return;
+                        }
+                        try {
+                          final user = await _auth.signInWithEmailAndPassword(
+                            email: _emailController.text,
+                            password: _pwController.text,
+                          );
+
+                          Navigator.pop(context, user);
+                        } on FirebaseAuthException catch(e) {
+                          if (e.code == 'invalid-email') {
+                            showMessageDialog(context, '올바른 이메일 형식으로 입력해주세요');
+                          } else {
+                            showMessageDialog(context, '이메일, 패스워드를 다시 확인해주세요');
+                          }
+                          print(e);
                         }
                       },
                     ),
@@ -106,21 +122,21 @@ class _LoginDialogState extends State<LoginDialog> {
 
   Future<dynamic> showMessageDialog(BuildContext context, String content) {
     return showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text('잠시만요!'),
-                                content: Text(content),
-                                actions: [
-                                  ColoredButton(
-                                    title: "알겠습니다",
-                                    backgroundColor: Colors.blue,
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            });
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('잠시만요!'),
+            content: Text(content),
+            actions: [
+              ColoredButton(
+                title: "알겠습니다",
+                backgroundColor: Colors.blue,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
   }
 }
