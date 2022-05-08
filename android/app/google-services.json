@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "631744135202",
+    "project_id": "fastagram",
+    "storage_bucket": "fastagram.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:631744135202:android:2ed548234d12f2f1d50a7b",
+        "android_client_info": {
+          "package_name": "com.example.flutter_sns"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "631744135202-sjimk11m56jr69ps288spcm0aet9po0v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLs1pgmr2MeZ-0pAsKB8DOAPscC5g66fU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "631744135202-sjimk11m56jr69ps288spcm0aet9po0v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

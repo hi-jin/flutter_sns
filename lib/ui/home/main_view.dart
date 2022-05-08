@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sns/core/theme.dart';
 import 'package:flutter_sns/widgets/login_dialog.dart';
 
-class MainView extends StatelessWidget {
+class MainView extends StatefulWidget {
   const MainView({Key? key}) : super(key: key);
 
+  @override
+  State<MainView> createState() => _MainViewState();
+}
+
+class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,13 +33,15 @@ class MainView extends StatelessWidget {
                   style: kTitleTextStyle,
                 ),
                 TextButton(
-                  onPressed: () {
-                    showDialog(
+                  onPressed: () async {
+                    final user = await showDialog(
                       context: context,
                       builder: (context) {
                         return LoginDialog();
                       },
                     );
+                    print(user);
+                    setState(() {});
                   },
                   child: Text(
                     "로그인",
