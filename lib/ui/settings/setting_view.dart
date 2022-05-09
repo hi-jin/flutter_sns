@@ -16,8 +16,8 @@ class SettingView extends ConsumerWidget {
             title: "로그아웃",
             backgroundColor: MyColors.primary,
             onPressed: () async {
-              await ref.watch(userProvider.notifier).logout();
-              ref.watch(currentPageProvider.state).state = 0;
+              await ref.read(userProvider.notifier).logout();
+              ref.read(currentPageProvider.state).state = 0;
             },
           )
         ],

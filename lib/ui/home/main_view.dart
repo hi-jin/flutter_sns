@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns/core/providers.dart';
 import 'package:flutter_sns/core/theme.dart';
 import 'package:flutter_sns/ui/settings/setting_view.dart';
+import 'package:flutter_sns/widgets/chat_widget.dart';
 import 'package:flutter_sns/widgets/login_dialog.dart';
 
 class MainView extends ConsumerWidget {
@@ -47,7 +48,7 @@ class MainView extends ConsumerWidget {
             ],
             [
               Container(),
-              Container(),
+              ChatWidget(),
               SettingView(),
             ].elementAt(currentPage)
           ],
@@ -64,7 +65,7 @@ class MainView extends ConsumerWidget {
         ],
         currentIndex: currentPage,
         onTap: (index) {
-          ref.watch(currentPageProvider.state).state = index;
+          ref.read(currentPageProvider.state).state = index;
         },
       )
           : null,

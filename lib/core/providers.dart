@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final currentPageProvider = StateProvider<int>((ref) => 0);
 final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) => UserNotifier(null));
+final storeProvider = StateProvider((ref) => FirebaseFirestore.instance);
 
 
 
