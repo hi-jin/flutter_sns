@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sns/core/app_user.dart';
 import 'package:flutter_sns/core/theme.dart';
 
 class ChatWidget extends StatefulWidget {

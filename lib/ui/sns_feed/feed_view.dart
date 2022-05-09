@@ -1,14 +1,10 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sns/core/theme.dart';
 import 'package:flutter_sns/widgets/colored_button.dart';
 import 'package:flutter_sns/widgets/loading_widget.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../../core/app_user.dart';
 
 class FeedView extends StatefulWidget {
   const FeedView({Key? key}) : super(key: key);

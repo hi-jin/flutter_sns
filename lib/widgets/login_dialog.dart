@@ -1,85 +1,74 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sns/core/providers.dart';
 import 'package:flutter_sns/core/theme.dart';
 import 'package:flutter_sns/widgets/colored_button.dart';
+import 'package:flutter_sns/widgets/loading_widget.dart';
 
-import '../core/app_user.dart';
-import 'loading_widget.dart';
-
-class LoginDialog extends StatefulWidget {
-  LoginDialog({Key? key}) : super(key: key);
+class LoginDialog extends ConsumerStatefulWidget {
+  const LoginDialog({Key? key}) : super(key: key);
 
   @override
-  State<LoginDialog> createState() => _LoginDialogState();
+  ConsumerState<LoginDialog> createState() => _LoginDialogState();
 }
 
-class _LoginDialogState extends State<LoginDialog> {
-  late TextEditingController _emailController, _pwController;
+class _LoginDialogState extends ConsumerState<LoginDialog> {
+  late TextEditingController _emailController;
+  late TextEditingController _pwController;
   bool nowLoading = false;
 
   @override
   void initState() {
     super.initState();
-
     _emailController = TextEditingController();
     _pwController = TextEditingController();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      SimpleDialog(
-        contentPadding: EdgeInsets.zero,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+    return Stack(
+      children: [
+        Dialog(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   controller: _emailController,
-                  decoration: kInputDecoration.copyWith(hintText: "email"),
+                  decoration: kInputDecoration.copyWith(label: Text('email')),
                 ),
-                SizedBox(height: 10),
                 TextField(
-                  controller: _pwController,
                   obscureText: true,
-                  decoration: kInputDecoration.copyWith(hintText: "password"),
+                  controller: _pwController,
+                  decoration:
+                      kInputDecoration.copyWith(label: Text('password')),
                 ),
-                SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
                       child: ColoredButton(
-                        title: "회원가입",
-                        backgroundColor: Colors.grey,
+                        title: "로그인",
+                        backgroundColor: MyColors.primary,
                         onPressed: () async {
-                          // check empty
-                          if (_emailController.text == "" ||
-                              _pwController.text == "") {
-                            showMessageDialog(context, '이메일, 패스워드를 모두 입력해주세요');
-                            return;
-                          }
-                          if (_pwController.text.length < 6) {
-                            showMessageDialog(context, '비밀번호는 6자 이상 입력해주세요');
-                            return;
-                          }
-
-                          setState(() {
-                            nowLoading = true;
-                          });
                           try {
-                            final newUser = await AppUser.register(_emailController.text, _pwController.text);
-
-                            Navigator.pop(context, newUser);
+                            setState(() {
+                              nowLoading = true;
+                            });
+                            await ref.watch(userProvider.notifier).login(
+                                  _emailController.text,
+                                  _pwController.text,
+                                );
+                            Navigator.pop(context);
                           } on FirebaseAuthException catch (e) {
-                            if (e.code == 'email-already-in-use') {
-                              showMessageDialog(context, '이미 사용중인 이메일입니다.');
-                            }
                             if (e.code == 'invalid-email') {
-                              showMessageDialog(context, '올바른 이메일 형식으로 입력해주세요');
+                              await showMessageDialog(
+                                  context, '올바른 이메일 형식으로 입력해주세요');
+                            } else {
+                              await showMessageDialog(
+                                  context, '이메일과 비밀번호를 확인해주세요');
                             }
-                            print(e.code);
                           }
                           setState(() {
                             nowLoading = false;
@@ -89,27 +78,23 @@ class _LoginDialogState extends State<LoginDialog> {
                     ),
                     Expanded(
                       child: ColoredButton(
-                        title: "로그인",
-                        backgroundColor: MyColors.primary,
+                        title: "회원가입",
+                        backgroundColor: Colors.grey,
                         onPressed: () async {
-                          // check empty
-                          if (_emailController.text == "" ||
-                              _pwController.text == "") {
-                            showMessageDialog(context, '이메일, 패스워드를 모두 입력해주세요');
-                            return;
-                          }
-                          setState(() {
-                            nowLoading = true;
-                          });
                           try {
-                            final user = await AppUser.login(_emailController.text, _pwController.text);
-
-                            Navigator.pop(context, user);
+                            setState(() {
+                              nowLoading = true;
+                            });
+                            await ref.watch(userProvider.notifier).register(
+                                _emailController.text, _pwController.text);
+                            Navigator.pop(context);
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'invalid-email') {
-                              showMessageDialog(context, "이메일 형식에 맞춰주세요");
+                              await showMessageDialog(
+                                  context, '올바른 이메일 형식으로 입력해주세요');
                             } else {
-                              showMessageDialog(context, "이메일, 패스워드를 확인해주세요");
+                              await showMessageDialog(
+                                  context, '이메일과 비밀번호를 확인해주세요');
                             }
                           }
                           setState(() {
@@ -123,12 +108,10 @@ class _LoginDialogState extends State<LoginDialog> {
               ],
             ),
           ),
-        ],
-      ),
-      if (nowLoading) ...[
-        LoadingWidget(),
-      ]
-    ]);
+        ),
+        if (nowLoading) ...[LoadingWidget()],
+      ],
+    );
   }
 
   Future<dynamic> showMessageDialog(BuildContext context, String content) {
