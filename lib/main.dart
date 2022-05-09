@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sns/core/app_user.dart';
 import 'package:flutter_sns/firebase_options.dart';
 import 'package:flutter_sns/ui/home/main_view.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,6 +22,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          color: Colors.teal
+        ),
+        tabBarTheme: TabBarTheme(
+          labelColor: Colors.black
+        ),
+      ),
       home: MainView(),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sns/core/auth.dart';
+import 'package:flutter_sns/core/app_user.dart';
 import 'package:flutter_sns/core/theme.dart';
 
 class ChatWidget extends StatefulWidget {
@@ -54,7 +54,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                     itemBuilder: (context, i) {
                       final at = DateTime.fromMicrosecondsSinceEpoch(sent_at.elementAt(i).microsecondsSinceEpoch);
                       return ListTile(
-                        textColor: (user!.email != senders.elementAt(i)) ? Colors.black: Colors.blue,
+                        // textColor: (User.currentUser.user.email != senders.elementAt(i)) ? Colors.black: MyColors.primary,
                         title: Text(messages.elementAt(i)),
                         subtitle: Text('by ${senders.elementAt(i).split('@').elementAt(0)}'),
                         trailing: Text('${at.hour}시 ${at.minute}분'),
@@ -74,7 +74,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                     }
                     _fireStore.collection("messages").add({
                       'text': _chatController.text,
-                      'sender': user!.email,
+                      // 'sender': User.currentUser!.email,
                       'sent_at': Timestamp.now(),
                     });
                     setState(() {

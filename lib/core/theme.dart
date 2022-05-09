@@ -12,3 +12,6 @@ const kInputDecoration = InputDecoration(
   border: OutlineInputBorder(),
 );
 
+class MyColors {
+  static const Color primary = Colors.teal;
+}

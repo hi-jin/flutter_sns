@@ -3,11 +3,12 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sns/core/theme.dart';
 import 'package:flutter_sns/widgets/colored_button.dart';
 import 'package:flutter_sns/widgets/loading_widget.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../core/auth.dart';
+import '../../core/app_user.dart';
 
 class FeedView extends StatefulWidget {
   const FeedView({Key? key}) : super(key: key);
@@ -29,7 +30,7 @@ class _FeedViewState extends State<FeedView> {
 
   void getAuth() {
     setState(() {
-      user = auth.currentUser;
+      // user = auth.currentUser;
     });
   }
 
@@ -101,7 +102,7 @@ class _FeedViewState extends State<FeedView> {
               ),
               ColoredButton(
                 title: "사진 업로드",
-                backgroundColor: Colors.blue,
+                backgroundColor: MyColors.primary,
                 onPressed: () async {
                   XFile? image = await _imagePicker.pickImage(
                       source: ImageSource.gallery,
@@ -109,11 +110,11 @@ class _FeedViewState extends State<FeedView> {
                       maxHeight: 400);
                   if (image == null) return;
 
-                  await _fireStorage
-                      .child(
-                          'post/${user!.email}-${DateTime.now().millisecondsSinceEpoch}.png')
-                      .putFile(File(image.path))
-                      .whenComplete(() => print('hi'));
+                  // await _fireStorage
+                  //     .child(
+                  //         'post/${User.currentUser!.email}-${DateTime.now().millisecondsSinceEpoch}.png')
+                  //     .putFile(File(image.path))
+                  //     .whenComplete(() => print('hi'));
                 },
               )
             ],

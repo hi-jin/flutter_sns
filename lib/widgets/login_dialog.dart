@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sns/core/theme.dart';
 import 'package:flutter_sns/widgets/colored_button.dart';
 
-import '../core/auth.dart';
+import '../core/app_user.dart';
 import 'loading_widget.dart';
 
 class LoginDialog extends StatefulWidget {
@@ -69,11 +69,8 @@ class _LoginDialogState extends State<LoginDialog> {
                             nowLoading = true;
                           });
                           try {
-                            final newUser =
-                                await auth.createUserWithEmailAndPassword(
-                              email: _emailController.text,
-                              password: _pwController.text,
-                            );
+                            final newUser = await AppUser.register(_emailController.text, _pwController.text);
+
                             Navigator.pop(context, newUser);
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'email-already-in-use') {
@@ -93,7 +90,7 @@ class _LoginDialogState extends State<LoginDialog> {
                     Expanded(
                       child: ColoredButton(
                         title: "로그인",
-                        backgroundColor: Colors.blue,
+                        backgroundColor: MyColors.primary,
                         onPressed: () async {
                           // check empty
                           if (_emailController.text == "" ||
@@ -105,20 +102,15 @@ class _LoginDialogState extends State<LoginDialog> {
                             nowLoading = true;
                           });
                           try {
-                            final user = await auth.signInWithEmailAndPassword(
-                              email: _emailController.text,
-                              password: _pwController.text,
-                            );
+                            final user = await AppUser.login(_emailController.text, _pwController.text);
 
                             Navigator.pop(context, user);
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'invalid-email') {
-                              showMessageDialog(context, '올바른 이메일 형식으로 입력해주세요');
+                              showMessageDialog(context, "이메일 형식에 맞춰주세요");
                             } else {
-                              showMessageDialog(
-                                  context, '이메일, 패스워드를 다시 확인해주세요');
+                              showMessageDialog(context, "이메일, 패스워드를 확인해주세요");
                             }
-                            print(e);
                           }
                           setState(() {
                             nowLoading = false;
@@ -149,7 +141,7 @@ class _LoginDialogState extends State<LoginDialog> {
             actions: [
               ColoredButton(
                 title: "알겠습니다",
-                backgroundColor: Colors.blue,
+                backgroundColor: MyColors.primary,
                 onPressed: () {
                   Navigator.pop(context);
                 },
